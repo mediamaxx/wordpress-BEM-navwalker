@@ -1,6 +1,5 @@
 <?php
 class walker_bem_menu extends Walker_Nav_Menu {
-
     function __construct($css_class_prefix) {
         $this->css_class_prefix = $css_class_prefix;
         
@@ -78,7 +77,11 @@ class walker_bem_menu extends Walker_Nav_Menu {
         $attributes  = ! empty($item->attr_title) ? ' title="'  . esc_attr($item->attr_title) .'"' : '';
         $attributes .= ! empty($item->target)     ? ' target="' . esc_attr($item->target    ) .'"' : '';
         $attributes .= ! empty($item->xfn)        ? ' rel="'    . esc_attr($item->xfn       ) .'"' : '';
-        $attributes .= ! empty($item->url)        ? ' href="'   . esc_attr($item->url       ) .'"' : '';
+        // remove circular references
+        if( !$item->current )
+            $attributes .= ! empty($item->url) ? ' href="'. esc_attr($item->url) .'"' : '';
+        else
+            $attributes .= ! empty($item->url) ? ' ' : ' ';
         // Creatre link markup
         $item_output = $args->before;
         $item_output .= '<a' . $attributes . ' ' . $link_class_output . '>';
